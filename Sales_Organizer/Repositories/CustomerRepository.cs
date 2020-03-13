@@ -28,22 +28,25 @@ namespace Sales_Organizer.Repositories
 
         public void DeleteCustomer(int id)
         {
-            throw new NotImplementedException();
-        }
+            var customer = GetCustomer(id);
+            _customerContext.Customers.Remove(customer);
+            _customerContext.SaveChanges();
+;        }
 
         public IEnumerable<Customer> GetAllCustomers()
         {
-            throw new NotImplementedException();
+            return _customerContext.Customers.ToList<Customer>();
         }
 
         public Customer GetCustomer(int id)
         {
-            throw new NotImplementedException();
+            return _customerContext.Customers.FirstOrDefault(c => c.CustomerId == id);
         }
 
         public void UpdateCustomer(Customer customer)
         {
-            throw new NotImplementedException();
+            _customerContext.Customers.Update(customer);
+            _customerContext.SaveChanges();
         }
     }
 }
