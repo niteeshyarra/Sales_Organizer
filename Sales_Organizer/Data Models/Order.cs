@@ -11,6 +11,6 @@ namespace Sales_Organizer.Data_Models
 
         public int CustomerId { get; set; }
         public Customer Customer { get; set; }
-        public ICollection<ProductInOrder> ProductsInOrder { get; set; }
+        public ICollection<ProductOrder> ProductsInOrder { get; set; }
     }
 }

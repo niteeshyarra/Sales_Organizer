@@ -41,7 +41,7 @@ namespace Sales_Organizer.Repositories
 
         public IEnumerable<Order> GetOrdersByProduct(int id)
         {
-            return _customerContext.ProductInOrders.Where(p => p.ProductId == id)
+            return _customerContext.ProductOrders.Where(p => p.ProductId == id)
                                                     .Select(p => p.Order);
         }
     }

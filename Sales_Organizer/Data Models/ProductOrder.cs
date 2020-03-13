@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace Sales_Organizer.Data_Models
 {
-    public class ProductInOrder
+    public class ProductOrder
     {
-        public int ProductInOrderId { get; set; }
+        public int ProductOrderId { get; set; }
         public int Quantity { get; set; }
         public bool Paid { get; set; }
 
