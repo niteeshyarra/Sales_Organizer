@@ -9,8 +9,9 @@ namespace Sales_Organizer.Repositories.Interfaces
     public interface IOrderRepository
     {
         void AddOrder(Order order);
-        void DeleteOrder(Order order);
-        IEnumerable<Order> GetOrdersByCustomer(int Id);
-        IEnumerable<Order> GetOrdersByProduct(int Id);
+        Order GetOrder(int id);
+        void DeleteOrder(int id);
+        IEnumerable<Order> GetOrdersByCustomer(int id);
+        IEnumerable<Order> GetOrdersByProduct(int id);
     }
 }

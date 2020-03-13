@@ -16,7 +16,8 @@ namespace Sales_Organizer.Data_Contexts
 
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Product> Products { get; set; }
-        public DbSet<ProductInOrder> ProductsInOrder { get; set; }
+        public DbSet<ProductInOrder> ProductInOrders { get; set; }
+        public DbSet<Order> Orders { get; set; }
 
     }
 }
