@@ -16,31 +16,31 @@ namespace Sales_Organizer.Repositories
         {
             _customerContext = customerContext;
         }
-        public void AddCustomer(Customer customer)
+        public async Task AddCustomer(Customer customer)
         {
             if(customer == null)
             {
                 throw new ArgumentException("Customer Can't be null");
             }
-            _customerContext.Customers.Add(customer);
+             await _customerContext.Customers.AddAsync(customer);
             _customerContext.SaveChanges();
         }
 
         public void DeleteCustomer(int id)
         {
             var customer = GetCustomer(id);
-            _customerContext.Customers.Remove(customer);
+            _customerContext.Customers.Remove(customer.Result);
             _customerContext.SaveChanges();
 ;        }
 
-        public IEnumerable<Customer> GetAllCustomers()
+        public async Task<IEnumerable<Customer>> GetAllCustomers()
         {
-            return _customerContext.Customers.ToList<Customer>();
+            return await _customerContext.Customers.ToListAsync<Customer>();
         }
 
-        public Customer GetCustomer(int id)
+        public async Task<Customer> GetCustomer(int id)
         {
-            return _customerContext.Customers.FirstOrDefault(c => c.CustomerId == id);
+            return await _customerContext.Customers.FirstOrDefaultAsync(c => c.CustomerId == id);
         }
 
         public void UpdateCustomer(Customer customer)

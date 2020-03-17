@@ -9,6 +9,7 @@ namespace Sales_Organizer.Data_Models
     {
         public int CustomerId { get; set; }
         public string Name { get; set; }
+        public string PhoneNumber { get; set; }
 
         public ICollection<Order> Orders { get; set; }
     }
