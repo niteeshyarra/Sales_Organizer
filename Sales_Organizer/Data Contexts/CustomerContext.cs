@@ -19,5 +19,15 @@ namespace Sales_Organizer.Data_Contexts
         public DbSet<ProductOrder> ProductOrders { get; set; }
         public DbSet<Order> Orders { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Customer>()
+                        .HasIndex(c => c.PhoneNumber)
+                        .IsUnique();
+
+            modelBuilder.Entity<Product>()
+                        .HasIndex(p => p.Name)
+                        .IsUnique();
+        }
     }
 }

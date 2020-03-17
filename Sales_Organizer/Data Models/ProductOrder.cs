@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,6 +9,7 @@ namespace Sales_Organizer.Data_Models
     public class ProductOrder
     {
         public int ProductOrderId { get; set; }
+        [Required]
         public int Quantity { get; set; }
         public bool Paid { get; set; }
 
