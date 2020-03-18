@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using SalesOrganizer.DataContexts;
-using SalesOrganizer.DataModels;
-using SalesOrganizer.Repositories;
+﻿using Microsoft.AspNetCore.Mvc;
 using SalesOrganizer.Repositories.Interfaces;
+using SalesOrganizer.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SalesOrganizer.Controllers
 {
@@ -34,14 +29,15 @@ namespace SalesOrganizer.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Customer>> GetCustomer(int id)
         {
-            var customer = await _customerRepository.GetCustomer(id);
-
-            if (customer == null)
+            try
             {
-                return NotFound();
+                var customer = await _customerRepository.GetCustomer(id);
+                return customer;
             }
-
-            return customer;
+            catch(Exception e)
+            {
+                return BadRequest(e);
+            }
         }
 
         // PUT: api/Customers/5
@@ -50,13 +46,16 @@ namespace SalesOrganizer.Controllers
         [HttpPut]
         public ActionResult Update(Customer customer)
         {
-            var retreivedCustomer = _customerRepository.GetCustomer(customer.CustomerId);
-            if(retreivedCustomer == null)
+            try
             {
-                return BadRequest();
+                _customerRepository.UpdateCustomer(customer);
+                return Ok();
             }
-            _customerRepository.UpdateCustomer(customer);
-            return Ok();
+            catch(Exception e)
+            {
+                return BadRequest(e);
+            }
+            
         }
 
         // POST: api/Customers
@@ -64,7 +63,7 @@ namespace SalesOrganizer.Controllers
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
         public async Task<ActionResult> Add(Customer customer)
-        {            
+        {
             await _customerRepository.AddCustomer(customer);
 
             return Ok();
@@ -74,14 +73,17 @@ namespace SalesOrganizer.Controllers
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {
-            var customer = GetCustomer(id);
-            if (customer == null)
+            try
             {
-                return NotFound();
+                _customerRepository.DeleteCustomer(id);
+                return Ok();
+            }
+            catch(Exception e)
+            {
+                return NotFound(e);
             }
 
-            _customerRepository.DeleteCustomer(id);
-            return Ok();
+            
         }
     }
 }
