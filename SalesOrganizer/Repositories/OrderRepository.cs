@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using SalesOrganizer.DataContexts;
 using SalesOrganizer.DataModels;
 using SalesOrganizer.Repositories.Interfaces;
@@ -12,37 +13,91 @@ namespace SalesOrganizer.Repositories
     public class OrderRepository : IOrderRepository
     {
         private readonly CustomerContext _customerContext;
+        private readonly MapperConfiguration _dataModelConfig;
+        private readonly MapperConfiguration _viewModelConfig;
+
         public OrderRepository(CustomerContext customerContext)
         {
             _customerContext = customerContext;
+            _dataModelConfig = new MapperConfiguration(cfg => {
+                cfg.CreateMap<ViewModels.Order, DataModels.Order>();
+            });
+            _viewModelConfig = new MapperConfiguration(cfg => {
+                cfg.CreateMap<DataModels.Order, ViewModels.Order>();
+            });
         }
-        public void AddOrder(Order order)
+        public async Task AddOrder(ViewModels.Order order)
         {
-            _customerContext.Orders.Add(order);
+            IMapper mapper = _dataModelConfig.CreateMapper();
+            var mappedOrder = mapper.Map<ViewModels.Order, DataModels.Order>(order);
+            await _customerContext.Orders.AddAsync(mappedOrder);
             _customerContext.SaveChanges();
         }
 
-        public Order GetOrder(int id)
+        public async Task<ViewModels.Order> GetOrder(int id)
         {
-            return _customerContext.Orders.FirstOrDefault(o => o.OrderId == id);
+            var orderDTO = await _customerContext.Orders.FirstOrDefaultAsync(o => o.OrderId == id);
+            IMapper mapper = _viewModelConfig.CreateMapper();
+            return mapper.Map<DataModels.Order, ViewModels.Order>(orderDTO);
         }
 
         public void DeleteOrder(int id)
         {
             var order = GetOrder(id);
-            _customerContext.Orders.Remove(order);
+
+            if(order == null)
+            {
+                throw new ArgumentException("The record Does not Exist");
+            }
+
+            IMapper mapper = _dataModelConfig.CreateMapper();
+            var mappedOrder = mapper.Map<ViewModels.Order, DataModels.Order>(order.Result);
+            _customerContext.Orders.Remove(mappedOrder);
             _customerContext.SaveChanges();
         }
 
-        public IEnumerable<Order> GetOrdersByCustomer(int id)
+        public IEnumerable<ViewModels.Order> GetOrdersByCustomer(int id)
         {
-            return _customerContext.Orders.Where(c => c.CustomerId == id);
+            var orders = _customerContext.Orders.Where(c => c.CustomerId == id);
+            List<ViewModels.Order> orderDTO = new List<ViewModels.Order>();
+
+            IMapper mapper = _viewModelConfig.CreateMapper();
+            foreach(var order in orders){
+                orderDTO.Add(mapper.Map<DataModels.Order, ViewModels.Order>(order));
+            }
+            return orderDTO;
         }
 
-        public IEnumerable<Order> GetOrdersByProduct(int id)
+        public IEnumerable<ViewModels.Order> GetOrdersByProduct(int id)
         {
-            return _customerContext.ProductOrders.Where(p => p.ProductId == id)
+            List<ViewModels.Order> ordersDTO = new List<ViewModels.Order>();
+            var orders = _customerContext.ProductOrders.Where(p => p.ProductId == id)
                                                     .Select(p => p.Order);
+
+            IMapper mapper = _viewModelConfig.CreateMapper();
+            foreach(var order in orders)
+            {
+                ordersDTO.Add(mapper.Map<DataModels.Order, ViewModels.Order>(order));
+            }
+
+            return ordersDTO;
+        }
+
+        public async Task<IEnumerable<ViewModels.Order>> GetAllOrders()
+        {
+           var orders = await _customerContext.Orders.ToArrayAsync();
+
+            List<ViewModels.Order> ordersDTO = new List<ViewModels.Order>();
+            
+
+            IMapper mapper = _viewModelConfig.CreateMapper();
+            foreach (var order in orders)
+            {
+                ordersDTO.Add(mapper.Map<DataModels.Order, ViewModels.Order>(order));
+            }
+
+            return ordersDTO;
+
         }
     }
 }

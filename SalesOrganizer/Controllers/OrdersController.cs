@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SalesOrganizer.DataContexts;
 using SalesOrganizer.DataModels;
+using SalesOrganizer.Repositories.Interfaces;
 
 namespace SalesOrganizer.Controllers
 {
@@ -13,97 +14,59 @@ namespace SalesOrganizer.Controllers
     [ApiController]
     public class OrdersController : ControllerBase
     {
-        private readonly CustomerContext _context;
+        private readonly IOrderRepository _orderRepository;
 
-        public OrdersController(CustomerContext context)
+        public OrdersController(IOrderRepository orderRepository)
         {
-            _context = context;
+            _orderRepository = orderRepository;
         }
 
         // GET: api/Orders
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
+        public async Task<IEnumerable<ViewModels.Order>> GetOrders()
         {
-            return await _context.Orders.ToListAsync();
+            return await _orderRepository.GetAllOrders();
         }
 
         // GET: api/Orders/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Order>> GetOrder(int id)
         {
-            var order = await _context.Orders.FindAsync(id);
+            var order = await _orderRepository.GetOrder(id);
 
             if (order == null)
             {
                 return NotFound();
             }
 
-            return order;
+            return Ok(order);
         }
-
-        // PUT: api/Orders/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutOrder(int id, Order order)
-        {
-            if (id != order.OrderId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(order).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!OrderExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
+        
 
         // POST: api/Orders
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Order>> PostOrder(Order order)
+        public async Task<ActionResult> PostOrder(ViewModels.Order order)
         {
-            _context.Orders.Add(order);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetOrder", new { id = order.OrderId }, order);
+            await _orderRepository.AddOrder(order);
+            return Ok();
         }
 
         // DELETE: api/Orders/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Order>> DeleteOrder(int id)
+        public ActionResult DeleteOrder(int id)
         {
-            var order = await _context.Orders.FindAsync(id);
-            if (order == null)
+            try
             {
-                return NotFound();
+                _orderRepository.DeleteOrder(id);
+                return Ok();
             }
-
-            _context.Orders.Remove(order);
-            await _context.SaveChangesAsync();
-
-            return order;
-        }
-
-        private bool OrderExists(int id)
-        {
-            return _context.Orders.Any(e => e.OrderId == id);
+            catch(Exception e)
+            {
+                return BadRequest(e);
+            }
+            
         }
     }
 }

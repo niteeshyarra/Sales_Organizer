@@ -33,7 +33,7 @@ namespace SalesOrganizer.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProduct(int id)
         {
-            
+
             var product = await _productRepository.GetProduct(id);
 
             if (product == null)
@@ -60,9 +60,11 @@ namespace SalesOrganizer.Controllers
                 _productRepository.DeleteProduct(id);
                 return Ok();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return BadRequest(e);
             }
+
+        }
     }
 }

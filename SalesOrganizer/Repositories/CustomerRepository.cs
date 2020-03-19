@@ -18,12 +18,12 @@ namespace SalesOrganizer.Repositories
         public CustomerRepository(CustomerContext customerContext)
         {
             _customerContext = customerContext;
-               _dataModelConfig = new MapperConfiguration(cfg => {
-                    cfg.CreateMap<ViewModels.Customer, DataModels.Customer>();
-                });
-                _viewModelConfig = new MapperConfiguration(cfg => {
-                    cfg.CreateMap<DataModels.Customer, ViewModels.Customer>();
-                });
+            _dataModelConfig = new MapperConfiguration(cfg => {
+                cfg.CreateMap<ViewModels.Customer, DataModels.Customer>();
+            });
+            _viewModelConfig = new MapperConfiguration(cfg => {
+                cfg.CreateMap<DataModels.Customer, ViewModels.Customer>();
+            });
         }
         public async Task AddCustomer(Customer customer)
         {
