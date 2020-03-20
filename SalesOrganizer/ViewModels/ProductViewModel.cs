@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SalesOrganizer.ViewModels
 {
-    public class Product
+    public class ProductViewModel
     {
         public string Name { get; set; }
         public int Price { get; set; }

@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using SalesOrganizer.DataContexts;
-using SalesOrganizer.DataModels;
 using SalesOrganizer.Repositories.Interfaces;
+using SalesOrganizer.ViewModels;
 
 namespace SalesOrganizer.Controllers
 {
@@ -24,14 +20,14 @@ namespace SalesOrganizer.Controllers
 
         // GET: api/Products
         [HttpGet]
-        public async Task<IEnumerable<ViewModels.Product>> GetProducts()
+        public async Task<IEnumerable<ProductViewModel>> GetProducts()
         {
             return await _productRepository.GetAllProducts();
         }
 
         // GET: api/Products/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> GetProduct(int id)
+        public async Task<ActionResult<ProductViewModel>> GetProduct(int id)
         {
 
             var product = await _productRepository.GetProduct(id);
@@ -45,7 +41,7 @@ namespace SalesOrganizer.Controllers
         }
 
         [HttpPost]
-        public ActionResult PostProduct(ViewModels.Product product)
+        public ActionResult PostProduct(ProductViewModel product)
         {
             _productRepository.AddProduct(product);
             return Ok();

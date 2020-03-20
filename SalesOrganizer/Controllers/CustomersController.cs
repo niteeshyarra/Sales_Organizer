@@ -20,14 +20,14 @@ namespace SalesOrganizer.Controllers
 
         // GET: api/Customers
         [HttpGet]
-        public async Task<IEnumerable<Customer>> GetCustomers()
+        public async Task<IEnumerable<CustomerViewModel>> GetCustomers()
         {
             return await _customerRepository.GetAllCustomers();
         }
 
         // GET: api/Customers/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Customer>> GetCustomer(int id)
+        public async Task<ActionResult<CustomerViewModel>> GetCustomer(int id)
         {
             try
             {
@@ -44,7 +44,7 @@ namespace SalesOrganizer.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut]
-        public ActionResult Update(Customer customer)
+        public ActionResult Update(CustomerViewModel customer)
         {
             try
             {
@@ -62,7 +62,7 @@ namespace SalesOrganizer.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult> Add(Customer customer)
+        public async Task<ActionResult> Add(CustomerViewModel customer)
         {
             await _customerRepository.AddCustomer(customer);
 

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SalesOrganizer.DataContexts;
 using SalesOrganizer.DataModels;
 using SalesOrganizer.Repositories.Interfaces;
+using SalesOrganizer.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,27 +14,21 @@ namespace SalesOrganizer.Repositories
     public class ProductRepository : IProductRepository
     {
         private readonly CustomerContext _customerContext;
-        private readonly MapperConfiguration _dataModelConfig;
-        private readonly MapperConfiguration _viewModelConfig;
-        public ProductRepository(CustomerContext customerContext)
+        private readonly IMapper _mapper;
+
+        public ProductRepository(CustomerContext customerContext, IMapper mapper)
         {
             _customerContext = customerContext;
-            _dataModelConfig = new MapperConfiguration(cfg => {
-                cfg.CreateMap<ViewModels.Product, DataModels.Product>();
-            });
-            _viewModelConfig = new MapperConfiguration(cfg => {
-                cfg.CreateMap<DataModels.Product, ViewModels.Product>();
-            });
+            _mapper = mapper;
         }        
 
-        public async Task AddProduct(ViewModels.Product product)
+        public async Task AddProduct(ViewModels.ProductViewModel product)
         {
             if(product == null)
             {
                 throw new ArgumentException("Product can't be null");
             }
-            IMapper mapper = _dataModelConfig.CreateMapper();
-            var mappedCustomer = mapper.Map<ViewModels.Product, DataModels.Product>(product);
+            var mappedCustomer = _mapper.Map<ProductViewModel, Product>(product);
 
             await _customerContext.Products.AddAsync(mappedCustomer);
             _customerContext.SaveChanges();
@@ -47,39 +42,35 @@ namespace SalesOrganizer.Repositories
                 throw new ArgumentException("Record Doesn't Exist");
             }
 
-            IMapper mapper = _dataModelConfig.CreateMapper();
-            var mappedProduct = mapper.Map<ViewModels.Product, DataModels.Product>(product.Result);
+            var mappedProduct = _mapper.Map<ProductViewModel, Product>(product.Result);
             _customerContext.Products.Remove(mappedProduct);
             _customerContext.SaveChanges();
         }
 
-        public async Task<IEnumerable<ViewModels.Product>> GetAllProducts()
+        public async Task<IEnumerable<ViewModels.ProductViewModel>> GetAllProducts()
         {
             var productDTO = await _customerContext.Products.ToListAsync();
-            IMapper mapper = _viewModelConfig.CreateMapper();
 
-            List<ViewModels.Product> products = new List<ViewModels.Product>();
+            List<ProductViewModel> products = new List<ProductViewModel>();
             foreach(var product in productDTO)
             {
-                products.Add(mapper.Map<DataModels.Product, ViewModels.Product>(product));
+                products.Add(_mapper.Map<Product, ProductViewModel>(product));
             }
 
             return products;
         }
 
-        public async Task<ViewModels.Product> GetProduct(int id)
+        public async Task<ViewModels.ProductViewModel> GetProduct(int id)
         {
             var productDTO = await _customerContext.Products.FirstOrDefaultAsync(p => p.ProductId == id);
-            IMapper mapper = _viewModelConfig.CreateMapper();
 
-            return mapper.Map<DataModels.Product, ViewModels.Product>(productDTO);
+            return _mapper.Map<Product, ProductViewModel>(productDTO);
 
         }
 
-        public void UpdateProduct(ViewModels.Product prouct)
+        public void UpdateProduct(ProductViewModel prouct)
         {
-            IMapper mapper = _dataModelConfig.CreateMapper();
-            var productDTO = mapper.Map<ViewModels.Product, DataModels.Product>(prouct);
+            var productDTO = _mapper.Map<ProductViewModel, Product>(prouct);
             var foundProduct = _customerContext.Products.FindAsync(productDTO.ProductId);
 
             if (foundProduct == null)

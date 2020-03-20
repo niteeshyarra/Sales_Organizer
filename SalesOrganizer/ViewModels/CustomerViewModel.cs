@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SalesOrganizer.ViewModels
 {
-    public class Customer
+    public class CustomerViewModel
     {
         [Required]
         public string Name { get; set; }

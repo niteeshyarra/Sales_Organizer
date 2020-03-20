@@ -7,10 +7,10 @@ namespace SalesOrganizer.Repositories.Interfaces
 {
     public interface IProductRepository
     {
-        Task AddProduct(ViewModels.Product product);
-        Task<ViewModels.Product> GetProduct(int id);
-        void UpdateProduct(ViewModels.Product product);
+        Task AddProduct(ViewModels.ProductViewModel product);
+        Task<ViewModels.ProductViewModel> GetProduct(int id);
+        void UpdateProduct(ViewModels.ProductViewModel product);
         void DeleteProduct(int id);
-        Task<IEnumerable<ViewModels.Product>> GetAllProducts();
+        Task<IEnumerable<ViewModels.ProductViewModel>> GetAllProducts();
     }
 }

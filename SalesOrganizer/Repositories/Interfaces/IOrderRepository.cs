@@ -8,11 +8,11 @@ namespace SalesOrganizer.Repositories.Interfaces
 {
     public interface IOrderRepository
     {
-        Task AddOrder(ViewModels.Order order);
-        Task<ViewModels.Order> GetOrder(int id);
-        Task<IEnumerable<ViewModels.Order>> GetAllOrders();
+        Task AddOrder(ViewModels.OrderViewModel order);
+        Task<ViewModels.OrderViewModel> GetOrder(int id);
+        Task<IEnumerable<ViewModels.OrderViewModel>> GetAllOrders();
         void DeleteOrder(int id);
-        IEnumerable<ViewModels.Order> GetOrdersByCustomer(int id);
-        IEnumerable<ViewModels.Order> GetOrdersByProduct(int id);
+        IEnumerable<ViewModels.OrderViewModel> GetOrdersByCustomer(int id);
+        IEnumerable<ViewModels.OrderViewModel> GetOrdersByProduct(int id);
     }
 }

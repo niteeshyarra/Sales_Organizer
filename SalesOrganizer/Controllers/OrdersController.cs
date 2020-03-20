@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using SalesOrganizer.DataContexts;
-using SalesOrganizer.DataModels;
 using SalesOrganizer.Repositories.Interfaces;
+using SalesOrganizer.ViewModels;
 
 namespace SalesOrganizer.Controllers
 {
@@ -23,14 +20,14 @@ namespace SalesOrganizer.Controllers
 
         // GET: api/Orders
         [HttpGet]
-        public async Task<IEnumerable<ViewModels.Order>> GetOrders()
+        public async Task<IEnumerable<OrderViewModel>> GetOrders()
         {
             return await _orderRepository.GetAllOrders();
         }
 
         // GET: api/Orders/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Order>> GetOrder(int id)
+        public async Task<ActionResult<OrderViewModel>> GetOrder(int id)
         {
             var order = await _orderRepository.GetOrder(id);
 
@@ -47,7 +44,7 @@ namespace SalesOrganizer.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult> PostOrder(ViewModels.Order order)
+        public async Task<ActionResult> PostOrder(ViewModels.OrderViewModel order)
         {
             await _orderRepository.AddOrder(order);
             return Ok();
