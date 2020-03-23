@@ -81,9 +81,7 @@ namespace SalesOrganizer.Controllers
             catch(Exception e)
             {
                 return NotFound(e);
-            }
-
-            
-        }
+            }            
+        }        
     }
 }

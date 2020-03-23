@@ -20,11 +20,11 @@ namespace SalesOrganizer.Repositories
         {
             _customerContext = customerContext;
             _mapper = mapper;
-        }        
+        }
 
         public async Task AddProduct(ViewModels.ProductViewModel product)
         {
-            if(product == null)
+            if (product == null)
             {
                 throw new ArgumentException("Product can't be null");
             }
@@ -37,7 +37,7 @@ namespace SalesOrganizer.Repositories
         public void DeleteProduct(int id)
         {
             var product = GetProduct(id);
-            if(product == null)
+            if (product == null)
             {
                 throw new ArgumentException("Record Doesn't Exist");
             }
@@ -52,7 +52,7 @@ namespace SalesOrganizer.Repositories
             var productDTO = await _customerContext.Products.ToListAsync();
 
             List<ProductViewModel> products = new List<ProductViewModel>();
-            foreach(var product in productDTO)
+            foreach (var product in productDTO)
             {
                 products.Add(_mapper.Map<Product, ProductViewModel>(product));
             }
@@ -79,6 +79,11 @@ namespace SalesOrganizer.Repositories
             }
             _customerContext.Products.Update(productDTO);
             _customerContext.SaveChanges();
+        }
+        public async Task<bool> FindProduct(int id)
+        {
+            var product = await _customerContext.Products.FindAsync(id);
+            return product == null ? false : true;
         }
     }
 }

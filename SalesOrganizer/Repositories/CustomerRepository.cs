@@ -49,7 +49,6 @@ namespace SalesOrganizer.Repositories
 
             _customerContext.Customers.Remove(mappedCustomer);
             _customerContext.SaveChanges();
-            ;
         }
 
         public async Task<IEnumerable<CustomerViewModel>> GetAllCustomers()
@@ -95,6 +94,12 @@ namespace SalesOrganizer.Repositories
 
             _customerContext.Customers.Update(mappedCustomer);
             _customerContext.SaveChanges();
+        }
+
+        public async Task<bool> FindCustomer(int id)
+        {
+            var customer = await _customerContext.Customers.FindAsync(id);
+            return customer == null ? false : true;
         }
     }
 }

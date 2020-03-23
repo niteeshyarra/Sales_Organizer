@@ -12,5 +12,6 @@ namespace SalesOrganizer.Repositories.Interfaces
         void UpdateProduct(ViewModels.ProductViewModel product);
         void DeleteProduct(int id);
         Task<IEnumerable<ViewModels.ProductViewModel>> GetAllProducts();
+        Task<bool> FindProduct(int id);
     }
 }

@@ -20,13 +20,15 @@ namespace SalesOrganizer.Controllers
 
         // GET: api/Orders
         [HttpGet]
+        [Route("Orders/GetOrders")]
         public async Task<IEnumerable<OrderViewModel>> GetOrders()
         {
             return await _orderRepository.GetAllOrders();
         }
 
         // GET: api/Orders/5
-        [HttpGet("{id}")]
+        [HttpGet]
+        [Route("Orders/GetOrder/{id}")]
         public async Task<ActionResult<OrderViewModel>> GetOrder(int id)
         {
             var order = await _orderRepository.GetOrder(id);
@@ -63,7 +65,20 @@ namespace SalesOrganizer.Controllers
             {
                 return BadRequest(e);
             }
-            
+        }
+
+        [HttpGet]
+        [Route("Orders/GetOrdersByCustomer/{id}")]
+        public IEnumerable<OrderViewModel> GetOrdersByCustomer(int id)
+        {
+            return _orderRepository.GetOrdersByCustomer(id);
+        }
+        
+        [HttpGet]
+        [Route("Orders/GetOrdersByProduct/{id}")]
+        public IEnumerable<OrderViewModel> GetOrdersByProduct(int id)
+        {
+            return _orderRepository.GetOrdersByProduct(id);
         }
     }
 }

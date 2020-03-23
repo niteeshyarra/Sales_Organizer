@@ -11,6 +11,7 @@ namespace SalesOrganizer.Mappers
             CreateMap<CustomerViewModel, Customer>().ReverseMap();
             CreateMap<ProductViewModel, Product>().ReverseMap();
             CreateMap<OrderViewModel, Order>().ReverseMap();
+            CreateMap<ProductOrderViewModel, ProductOrder>().ReverseMap();
         }
     }
 }

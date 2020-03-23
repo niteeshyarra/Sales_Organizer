@@ -1,6 +1,6 @@
 ﻿namespace SalesOrganizer.ViewModels
 {
-    public class ProductOrder
+    public class ProductOrderViewModel
     {
         public bool Paid { get; set; }
         public int Quantity { get; set; }

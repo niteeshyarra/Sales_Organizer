@@ -10,7 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace SalesOrganizer.Repositories
-{    
+{
     public class OrderRepository : IOrderRepository
     {
         private readonly CustomerContext _customerContext;
@@ -21,16 +21,17 @@ namespace SalesOrganizer.Repositories
             _customerContext = customerContext;
             _mapper = mapper;
         }
-        public async Task AddOrder(ViewModels.OrderViewModel order)
+        public async Task AddOrder(OrderViewModel order)
         {
             var mappedOrder = _mapper.Map<OrderViewModel, Order>(order);
             await _customerContext.Orders.AddAsync(mappedOrder);
             _customerContext.SaveChanges();
         }
 
-        public async Task<ViewModels.OrderViewModel> GetOrder(int id)
+        public async Task<OrderViewModel> GetOrder(int id)
         {
-            var orderDTO = await _customerContext.Orders.FirstOrDefaultAsync(o => o.OrderId == id);
+            var orderDTO = await _customerContext.Orders.Include(p => p.ProductOrders)
+                                                        .FirstOrDefaultAsync(o => o.OrderId == id);
             return _mapper.Map<Order, OrderViewModel>(orderDTO);
         }
 
@@ -38,7 +39,7 @@ namespace SalesOrganizer.Repositories
         {
             var order = GetOrder(id);
 
-            if(order == null)
+            if (order == null)
             {
                 throw new ArgumentException("The record Does not Exist");
             }
@@ -50,10 +51,11 @@ namespace SalesOrganizer.Repositories
 
         public IEnumerable<OrderViewModel> GetOrdersByCustomer(int id)
         {
-            var orders = _customerContext.Orders.Where(c => c.CustomerId == id);
-            List<ViewModels.OrderViewModel> orderDTO = new List<ViewModels.OrderViewModel>();
+            var orders = _customerContext.Orders.Include(p => p.ProductOrders).Where(c => c.CustomerId == id);
+            List<OrderViewModel> orderDTO = new List<OrderViewModel>();
 
-            foreach(var order in orders){
+            foreach (var order in orders)
+            {
                 orderDTO.Add(_mapper.Map<Order, OrderViewModel>(order));
             }
             return orderDTO;
@@ -65,7 +67,7 @@ namespace SalesOrganizer.Repositories
             var orders = _customerContext.ProductOrders.Where(p => p.ProductId == id)
                                                     .Select(p => p.Order);
 
-            foreach(var order in orders)
+            foreach (var order in orders)
             {
                 ordersDTO.Add(_mapper.Map<Order, OrderViewModel>(order));
             }
@@ -75,10 +77,10 @@ namespace SalesOrganizer.Repositories
 
         public async Task<IEnumerable<OrderViewModel>> GetAllOrders()
         {
-           var orders = await _customerContext.Orders.ToArrayAsync();
+            var orders = await _customerContext.Orders.Include(p => p.ProductOrders).ToArrayAsync();
 
             List<OrderViewModel> ordersDTO = new List<OrderViewModel>();
-            
+
 
             foreach (var order in orders)
             {
@@ -86,7 +88,12 @@ namespace SalesOrganizer.Repositories
             }
 
             return ordersDTO;
+        }
 
+        public async Task<bool> FindOrder(int id)
+        {
+            var order = await _customerContext.Orders.FindAsync(id);
+            return order == null ? false : true;
         }
     }
 }

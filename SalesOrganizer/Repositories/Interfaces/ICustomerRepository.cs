@@ -13,5 +13,6 @@ namespace SalesOrganizer.Repositories.Interfaces
         void UpdateCustomer(CustomerViewModel customer);
         void DeleteCustomer(int id);
         Task<IEnumerable<CustomerViewModel>> GetAllCustomers();
+        Task<bool> FindCustomer(int id);
     }
 }
