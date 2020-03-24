@@ -43,6 +43,7 @@ namespace SalesOrganizer
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddAutoMapper(typeof(MappingProfile));
+            services.AddLogging();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -68,7 +69,6 @@ namespace SalesOrganizer
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Sales Organizer API V1");
             });
-            app.UseMiddleware<GlobalExceptionMiddleware>();
         }
     }
 }
