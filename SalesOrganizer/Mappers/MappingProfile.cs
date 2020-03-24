@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using SalesOrganizer.DataModels;
-using SalesOrganizer.ViewModels;
+using SalesOrganizer.RequestModels;
+using SalesOrganizer.ResponseModels;
 
 namespace SalesOrganizer.Mappers
 {
@@ -8,10 +9,15 @@ namespace SalesOrganizer.Mappers
     {
         public MappingProfile()
         {
-            CreateMap<CustomerViewModel, Customer>().ReverseMap();
-            CreateMap<ProductViewModel, Product>().ReverseMap();
-            CreateMap<OrderViewModel, Order>().ReverseMap();
-            CreateMap<ProductOrderViewModel, ProductOrder>().ReverseMap();
+            CreateMap<CustomerRequestModel, Customer>();
+            CreateMap<ProductRequestModel, Product>();
+            CreateMap<OrderRequestModel, Order>();
+            CreateMap<ProductOrderRequestModel, ProductOrder>();
+            
+            CreateMap<Customer, CustomerResponseModel>();
+            CreateMap<Product, ProductResponseModel>();
+            CreateMap<Order, OrderResponseModel>();
+            CreateMap<ProductOrder, ProductOrderResponseModel>();
         }
     }
 }

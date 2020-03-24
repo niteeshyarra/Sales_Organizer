@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SalesOrganizer.Repositories.Interfaces;
-using SalesOrganizer.ViewModels;
+using SalesOrganizer.RequestModels;
+using SalesOrganizer.ResponseModels;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -20,14 +21,14 @@ namespace SalesOrganizer.Controllers
 
         // GET: api/Customers
         [HttpGet]
-        public async Task<IEnumerable<CustomerViewModel>> GetCustomers()
+        public async Task<IEnumerable<CustomerResponseModel>> GetCustomers()
         {
             return await _customerRepository.GetAllCustomers();
         }
 
         // GET: api/Customers/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<CustomerViewModel>> GetCustomer(int id)
+        public async Task<ActionResult<CustomerResponseModel>> GetCustomer(int id)
         {
             try
             {
@@ -44,7 +45,7 @@ namespace SalesOrganizer.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut]
-        public ActionResult Update(CustomerViewModel customer)
+        public ActionResult Update(CustomerRequestModel customer)
         {
             try
             {
@@ -62,7 +63,7 @@ namespace SalesOrganizer.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult> Add(CustomerViewModel customer)
+        public async Task<ActionResult> Add(CustomerRequestModel customer)
         {
             await _customerRepository.AddCustomer(customer);
 

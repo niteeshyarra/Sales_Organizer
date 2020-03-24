@@ -3,7 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using SalesOrganizer.DataContexts;
 using SalesOrganizer.DataModels;
 using SalesOrganizer.Repositories.Interfaces;
-using SalesOrganizer.ViewModels;
+using SalesOrganizer.RequestModels;
+using SalesOrganizer.ResponseModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,13 +23,13 @@ namespace SalesOrganizer.Repositories
             _mapper = mapper;
         }
 
-        public async Task AddProduct(ViewModels.ProductViewModel product)
+        public async Task AddProduct(ProductRequestModel product)
         {
             if (product == null)
             {
                 throw new ArgumentException("Product can't be null");
             }
-            var mappedCustomer = _mapper.Map<ProductViewModel, Product>(product);
+            var mappedCustomer = _mapper.Map<ProductRequestModel, Product>(product);
 
             await _customerContext.Products.AddAsync(mappedCustomer);
             _customerContext.SaveChanges();
@@ -42,35 +43,35 @@ namespace SalesOrganizer.Repositories
                 throw new ArgumentException("Record Doesn't Exist");
             }
 
-            var mappedProduct = _mapper.Map<ProductViewModel, Product>(product.Result);
+            var mappedProduct = _mapper.Map<ProductResponseModel, Product>(product.Result);
             _customerContext.Products.Remove(mappedProduct);
             _customerContext.SaveChanges();
         }
 
-        public async Task<IEnumerable<ViewModels.ProductViewModel>> GetAllProducts()
+        public async Task<IEnumerable<ProductResponseModel>> GetAllProducts()
         {
             var productDTO = await _customerContext.Products.ToListAsync();
 
-            List<ProductViewModel> products = new List<ProductViewModel>();
+            List<ProductResponseModel> products = new List<ProductResponseModel>();
             foreach (var product in productDTO)
             {
-                products.Add(_mapper.Map<Product, ProductViewModel>(product));
+                products.Add(_mapper.Map<Product, ProductResponseModel>(product));
             }
 
             return products;
         }
 
-        public async Task<ViewModels.ProductViewModel> GetProduct(int id)
+        public async Task<ProductResponseModel> GetProduct(int id)
         {
             var productDTO = await _customerContext.Products.FirstOrDefaultAsync(p => p.ProductId == id);
 
-            return _mapper.Map<Product, ProductViewModel>(productDTO);
+            return _mapper.Map<Product, ProductResponseModel>(productDTO);
 
         }
 
-        public void UpdateProduct(ProductViewModel prouct)
+        public void UpdateProduct(ProductRequestModel prouct)
         {
-            var productDTO = _mapper.Map<ProductViewModel, Product>(prouct);
+            var productDTO = _mapper.Map<ProductRequestModel, Product>(prouct);
             var foundProduct = _customerContext.Products.FindAsync(productDTO.ProductId);
 
             if (foundProduct == null)

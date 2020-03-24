@@ -3,7 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using SalesOrganizer.DataContexts;
 using SalesOrganizer.DataModels;
 using SalesOrganizer.Repositories.Interfaces;
-using SalesOrganizer.ViewModels;
+using SalesOrganizer.RequestModels;
+using SalesOrganizer.ResponseModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,18 +22,18 @@ namespace SalesOrganizer.Repositories
             _customerContext = customerContext;
             _mapper = mapper;
         }
-        public async Task AddOrder(OrderViewModel order)
+        public async Task AddOrder(OrderRequestModel order)
         {
-            var mappedOrder = _mapper.Map<OrderViewModel, Order>(order);
+            var mappedOrder = _mapper.Map<OrderRequestModel, Order>(order);
             await _customerContext.Orders.AddAsync(mappedOrder);
             _customerContext.SaveChanges();
         }
 
-        public async Task<OrderViewModel> GetOrder(int id)
+        public async Task<OrderResponseModel> GetOrder(int id)
         {
             var orderDTO = await _customerContext.Orders.Include(p => p.ProductOrders)
                                                         .FirstOrDefaultAsync(o => o.OrderId == id);
-            return _mapper.Map<Order, OrderViewModel>(orderDTO);
+            return _mapper.Map<Order, OrderResponseModel>(orderDTO);
         }
 
         public void DeleteOrder(int id)
@@ -44,47 +45,47 @@ namespace SalesOrganizer.Repositories
                 throw new ArgumentException("The record Does not Exist");
             }
 
-            var mappedOrder = _mapper.Map<OrderViewModel, Order>(order.Result);
+            var mappedOrder = _mapper.Map<OrderResponseModel, Order>(order.Result);
             _customerContext.Orders.Remove(mappedOrder);
             _customerContext.SaveChanges();
         }
 
-        public IEnumerable<OrderViewModel> GetOrdersByCustomer(int id)
+        public IEnumerable<OrderResponseModel> GetOrdersByCustomer(int id)
         {
             var orders = _customerContext.Orders.Include(p => p.ProductOrders).Where(c => c.CustomerId == id);
-            List<OrderViewModel> orderDTO = new List<OrderViewModel>();
+            List<OrderResponseModel> orderDTO = new List<OrderResponseModel>();
 
             foreach (var order in orders)
             {
-                orderDTO.Add(_mapper.Map<Order, OrderViewModel>(order));
+                orderDTO.Add(_mapper.Map<Order, OrderResponseModel>(order));
             }
             return orderDTO;
         }
 
-        public IEnumerable<OrderViewModel> GetOrdersByProduct(int id)
+        public IEnumerable<OrderResponseModel> GetOrdersByProduct(int id)
         {
-            List<OrderViewModel> ordersDTO = new List<OrderViewModel>();
+            List<OrderResponseModel> ordersDTO = new List<OrderResponseModel>();
             var orders = _customerContext.ProductOrders.Where(p => p.ProductId == id)
                                                     .Select(p => p.Order);
 
             foreach (var order in orders)
             {
-                ordersDTO.Add(_mapper.Map<Order, OrderViewModel>(order));
+                ordersDTO.Add(_mapper.Map<Order, OrderResponseModel>(order));
             }
 
             return ordersDTO;
         }
 
-        public async Task<IEnumerable<OrderViewModel>> GetAllOrders()
+        public async Task<IEnumerable<OrderResponseModel>> GetAllOrders()
         {
             var orders = await _customerContext.Orders.Include(p => p.ProductOrders).ToArrayAsync();
 
-            List<OrderViewModel> ordersDTO = new List<OrderViewModel>();
+            List<OrderResponseModel> ordersDTO = new List<OrderResponseModel>();
 
 
             foreach (var order in orders)
             {
-                ordersDTO.Add(_mapper.Map<Order, OrderViewModel>(order));
+                ordersDTO.Add(_mapper.Map<Order, OrderResponseModel>(order));
             }
 
             return ordersDTO;

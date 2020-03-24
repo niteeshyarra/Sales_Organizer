@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SalesOrganizer.Repositories.Interfaces;
-using SalesOrganizer.ViewModels;
+using SalesOrganizer.RequestModels;
+using SalesOrganizer.ResponseModels;
 
 namespace SalesOrganizer.Controllers
 {
@@ -21,7 +22,7 @@ namespace SalesOrganizer.Controllers
         // GET: api/Orders
         [HttpGet]
         [Route("Orders/GetOrders")]
-        public async Task<IEnumerable<OrderViewModel>> GetOrders()
+        public async Task<IEnumerable<OrderResponseModel>> GetOrders()
         {
             return await _orderRepository.GetAllOrders();
         }
@@ -29,7 +30,7 @@ namespace SalesOrganizer.Controllers
         // GET: api/Orders/5
         [HttpGet]
         [Route("Orders/GetOrder/{id}")]
-        public async Task<ActionResult<OrderViewModel>> GetOrder(int id)
+        public async Task<ActionResult<OrderResponseModel>> GetOrder(int id)
         {
             var order = await _orderRepository.GetOrder(id);
 
@@ -46,7 +47,7 @@ namespace SalesOrganizer.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult> PostOrder(ViewModels.OrderViewModel order)
+        public async Task<ActionResult> PostOrder(OrderRequestModel order)
         {
             await _orderRepository.AddOrder(order);
             return Ok();
@@ -69,14 +70,14 @@ namespace SalesOrganizer.Controllers
 
         [HttpGet]
         [Route("Orders/GetOrdersByCustomer/{id}")]
-        public IEnumerable<OrderViewModel> GetOrdersByCustomer(int id)
+        public IEnumerable<OrderResponseModel> GetOrdersByCustomer(int id)
         {
             return _orderRepository.GetOrdersByCustomer(id);
         }
         
         [HttpGet]
         [Route("Orders/GetOrdersByProduct/{id}")]
-        public IEnumerable<OrderViewModel> GetOrdersByProduct(int id)
+        public IEnumerable<OrderResponseModel> GetOrdersByProduct(int id)
         {
             return _orderRepository.GetOrdersByProduct(id);
         }

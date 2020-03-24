@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SalesOrganizer.Repositories.Interfaces;
-using SalesOrganizer.ViewModels;
+using SalesOrganizer.RequestModels;
+using SalesOrganizer.ResponseModels;
 
 namespace SalesOrganizer.Controllers
 {
@@ -20,14 +21,14 @@ namespace SalesOrganizer.Controllers
 
         // GET: api/Products
         [HttpGet]
-        public async Task<IEnumerable<ProductViewModel>> GetProducts()
+        public async Task<IEnumerable<ProductResponseModel>> GetProducts()
         {
             return await _productRepository.GetAllProducts();
         }
 
         // GET: api/Products/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ProductViewModel>> GetProduct(int id)
+        public async Task<ActionResult<ProductResponseModel>> GetProduct(int id)
         {
 
             var product = await _productRepository.GetProduct(id);
@@ -41,7 +42,7 @@ namespace SalesOrganizer.Controllers
         }
 
         [HttpPost]
-        public ActionResult PostProduct(ProductViewModel product)
+        public ActionResult PostProduct(ProductRequestModel product)
         {
             _productRepository.AddProduct(product);
             return Ok();

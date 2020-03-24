@@ -4,14 +4,12 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SalesOrganizer.ViewModels
+namespace SalesOrganizer.ResponseModels
 {
-    public class CustomerViewModel
+    public class CustomerResponseModel
     {
-        [Required]
+        public int CustomerId { get; set; }
         public string Name { get; set; }
-
-        [Required]
         public string PhoneNumber { get; set; }
     }
 }

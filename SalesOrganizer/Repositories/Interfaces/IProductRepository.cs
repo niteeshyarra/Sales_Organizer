@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SalesOrganizer.RequestModels;
+using SalesOrganizer.ResponseModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,11 +9,11 @@ namespace SalesOrganizer.Repositories.Interfaces
 {
     public interface IProductRepository
     {
-        Task AddProduct(ViewModels.ProductViewModel product);
-        Task<ViewModels.ProductViewModel> GetProduct(int id);
-        void UpdateProduct(ViewModels.ProductViewModel product);
+        Task AddProduct(ProductRequestModel product);
+        Task<ProductResponseModel> GetProduct(int id);
+        void UpdateProduct(ProductRequestModel product);
         void DeleteProduct(int id);
-        Task<IEnumerable<ViewModels.ProductViewModel>> GetAllProducts();
+        Task<IEnumerable<ProductResponseModel>> GetAllProducts();
         Task<bool> FindProduct(int id);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using SalesOrganizer.DataModels;
-using SalesOrganizer.ViewModels;
+using SalesOrganizer.RequestModels;
+using SalesOrganizer.ResponseModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,12 +10,12 @@ namespace SalesOrganizer.Repositories.Interfaces
 {
     public interface IOrderRepository
     {
-        Task AddOrder(OrderViewModel order);
-        Task<OrderViewModel> GetOrder(int id);
-        Task<IEnumerable<OrderViewModel>> GetAllOrders();
+        Task AddOrder(OrderRequestModel order);
+        Task<OrderResponseModel> GetOrder(int id);
+        Task<IEnumerable<OrderResponseModel>> GetAllOrders();
         void DeleteOrder(int id);
-        IEnumerable<OrderViewModel> GetOrdersByCustomer(int id);
-        IEnumerable<OrderViewModel> GetOrdersByProduct(int id);
+        IEnumerable<OrderResponseModel> GetOrdersByCustomer(int id);
+        IEnumerable<OrderResponseModel> GetOrdersByProduct(int id);
         Task<bool> FindOrder(int id);
     }
 }
