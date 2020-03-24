@@ -68,6 +68,7 @@ namespace SalesOrganizer
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Sales Organizer API V1");
             });
+            app.UseMiddleware<GlobalExceptionMiddleware>();
         }
     }
 }

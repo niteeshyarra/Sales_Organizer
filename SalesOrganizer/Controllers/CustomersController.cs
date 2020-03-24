@@ -30,20 +30,15 @@ namespace SalesOrganizer.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<CustomerResponseModel>> GetCustomer(int id)
         {
-            try
+            var customer = await _customerRepository.GetCustomer(id);
+            if(customer == null)
             {
-                var customer = await _customerRepository.GetCustomer(id);
-                return customer;
+                return NotFound();
             }
-            catch (Exception e)
-            {
-                return BadRequest(e);
-            }
+            return customer;
         }
 
         // PUT: api/Customers/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
         public async Task<ActionResult> Update(int id, CustomerRequestModel customer)
         {
@@ -60,8 +55,6 @@ namespace SalesOrganizer.Controllers
         }
 
         // POST: api/Customers
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
         public async Task<ActionResult> Add(CustomerRequestModel customer)
         {
@@ -79,7 +72,7 @@ namespace SalesOrganizer.Controllers
                 await _customerRepository.DeleteCustomer(id);
                 return Ok();
             }
-            catch (KeyNotFoundException ke)
+            catch (KeyNotFoundException)
             {
                 return NotFound();
             }
