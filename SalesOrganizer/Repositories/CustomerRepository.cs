@@ -7,6 +7,7 @@ using SalesOrganizer.RequestModels;
 using SalesOrganizer.ResponseModels;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SalesOrganizer.Repositories
@@ -22,8 +23,6 @@ namespace SalesOrganizer.Repositories
             _mapper = mapper;
         }
 
-
-
         public async Task AddCustomer(CustomerRequestModel customer)
         {
 
@@ -38,17 +37,14 @@ namespace SalesOrganizer.Repositories
             _customerContext.SaveChanges();
         }
 
-        public void DeleteCustomer(int id)
+        public async Task DeleteCustomer(int id)
         {
-            var customer = GetCustomer(id);
+            var customer = await FindCustomer(id);
             if (customer == null)
             {
                 throw new KeyNotFoundException();
             }
-
-            var mappedCustomer = _mapper.Map<CustomerResponseModel, Customer>(customer.Result);
-
-            _customerContext.Customers.Remove(mappedCustomer);
+            _customerContext.Customers.Remove(customer);
             _customerContext.SaveChanges();
         }
 
@@ -68,11 +64,11 @@ namespace SalesOrganizer.Repositories
 
         public async Task<CustomerResponseModel> GetCustomer(int id)
         {
-            var foundCustomer = _customerContext.Customers.FindAsync(id);
+            var foundCustomer = await _customerContext.Customers.FindAsync(id);
 
             if (foundCustomer == null)
             {
-                throw new ArgumentException("No customer with this ID Exists");
+                return null;
             }
 
             var customer = await _customerContext.Customers.FirstOrDefaultAsync(c => c.CustomerId == id);
@@ -82,25 +78,22 @@ namespace SalesOrganizer.Repositories
             return customerDTO;
         }
 
-        public void UpdateCustomer(CustomerRequestModel customer)
+        public async Task UpdateCustomer(int id, CustomerRequestModel customer)
         {
-            var mappedCustomer = _mapper.Map<CustomerRequestModel, Customer>(customer);
-
-            var foundCustomer = _customerContext.Customers.FindAsync(mappedCustomer.CustomerId);
-
-            if (foundCustomer == null)
+            var existingCustomer = await FindCustomer(id);
+            if (existingCustomer == null)
             {
-                throw new ArgumentException("No record Exists to update");
+                throw new KeyNotFoundException("No record Exists to update");
             }
+            var mappedCustomer = _mapper.Map<CustomerRequestModel, Customer>(customer, existingCustomer);           
 
             _customerContext.Customers.Update(mappedCustomer);
             _customerContext.SaveChanges();
         }
 
-        public async Task<bool> FindCustomer(int id)
+        private async Task<Customer> FindCustomer(int id)
         {
-            var customer = await _customerContext.Customers.FindAsync(id);
-            return customer == null ? false : true;
+            return await _customerContext.Customers.FindAsync(id);
         }
     }
 }

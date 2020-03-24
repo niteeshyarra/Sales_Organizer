@@ -35,7 +35,7 @@ namespace SalesOrganizer.Controllers
                 var customer = await _customerRepository.GetCustomer(id);
                 return customer;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return BadRequest(e);
             }
@@ -44,12 +44,12 @@ namespace SalesOrganizer.Controllers
         // PUT: api/Customers/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPut]
-        public ActionResult Update(CustomerRequestModel customer)
+        [HttpPut("{id}")]
+        public async Task<ActionResult> Update(int id, CustomerRequestModel customer)
         {
             try
             {
-                _customerRepository.UpdateCustomer(customer);
+                await _customerRepository.UpdateCustomer(id, customer);
                 return Ok();
             }
             catch(Exception e)
@@ -72,16 +72,20 @@ namespace SalesOrganizer.Controllers
 
         // DELETE: api/Customers/5
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
             try
             {
-                _customerRepository.DeleteCustomer(id);
+                await _customerRepository.DeleteCustomer(id);
                 return Ok();
             }
-            catch(Exception e)
+            catch (KeyNotFoundException ke)
             {
-                return NotFound(e);
+                return NotFound();
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
             }            
         }        
     }
