@@ -31,70 +31,60 @@ namespace SalesOrganizer.Repositories
 
         public async Task<OrderResponseModel> GetOrder(int id)
         {
-            var orderDTO = await _customerContext.Orders.Include(p => p.ProductOrders)
+            var orderDTO = await _customerContext.Orders
+                                                        .Include(o => o.Customer)
+                                                        .Include(o => o.ProductOrders)
+                                                            .ThenInclude(po => po.Product)
                                                         .FirstOrDefaultAsync(o => o.OrderId == id);
             return _mapper.Map<Order, OrderResponseModel>(orderDTO);
         }
 
-        public void DeleteOrder(int id)
+        public async Task DeleteOrder(int id)
         {
-            var order = GetOrder(id);
+            var order = await FindOrder(id);
 
             if (order == null)
             {
                 throw new ArgumentException("The record Does not Exist");
             }
-
-            var mappedOrder = _mapper.Map<OrderResponseModel, Order>(order.Result);
-            _customerContext.Orders.Remove(mappedOrder);
+            _customerContext.Orders.Remove(order);
             _customerContext.SaveChanges();
         }
 
         public IEnumerable<OrderResponseModel> GetOrdersByCustomer(int id)
         {
             var orders = _customerContext.Orders.Include(p => p.ProductOrders).Where(c => c.CustomerId == id);
-            List<OrderResponseModel> orderDTO = new List<OrderResponseModel>();
-
-            foreach (var order in orders)
-            {
-                orderDTO.Add(_mapper.Map<Order, OrderResponseModel>(order));
-            }
-            return orderDTO;
+            
+            return _mapper.Map<IEnumerable<Order>, IEnumerable<OrderResponseModel>>(orders);
         }
 
         public IEnumerable<OrderResponseModel> GetOrdersByProduct(int id)
         {
             List<OrderResponseModel> ordersDTO = new List<OrderResponseModel>();
-            var orders = _customerContext.ProductOrders.Where(p => p.ProductId == id)
-                                                    .Select(p => p.Order);
+            var orders = _customerContext.ProductOrders
+                                                        .Include(po => po.Order)
+                                                            .ThenInclude(o => o.Customer)
+                                                        .Where(p => p.ProductId == id)
+                                                        .Select(po => po.Order);
 
-            foreach (var order in orders)
-            {
-                ordersDTO.Add(_mapper.Map<Order, OrderResponseModel>(order));
-            }
 
-            return ordersDTO;
+            return _mapper.Map<IEnumerable<Order>, IEnumerable<OrderResponseModel>>(orders);
         }
 
         public async Task<IEnumerable<OrderResponseModel>> GetAllOrders()
         {
-            var orders = await _customerContext.Orders.Include(p => p.ProductOrders).ToArrayAsync();
+            var orders = _customerContext.Orders
+                                            .Include(o => o.Customer)
+                                            .Include(p => p.ProductOrders)
+                                                .ThenInclude(po => po.Product);
 
-            List<OrderResponseModel> ordersDTO = new List<OrderResponseModel>();
-
-
-            foreach (var order in orders)
-            {
-                ordersDTO.Add(_mapper.Map<Order, OrderResponseModel>(order));
-            }
-
-            return ordersDTO;
+            return _mapper.Map<IEnumerable<Order>, IEnumerable<OrderResponseModel>>(orders);
         }
 
-        public async Task<bool> FindOrder(int id)
+        private async Task<Order> FindOrder(int id)
         {
-            var order = await _customerContext.Orders.FindAsync(id);
-            return order == null ? false : true;
+            return await _customerContext.Orders.FindAsync(id);
+            
         }
     }
 }

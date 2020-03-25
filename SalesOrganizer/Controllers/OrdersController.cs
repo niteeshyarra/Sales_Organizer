@@ -21,15 +21,13 @@ namespace SalesOrganizer.Controllers
 
         // GET: api/Orders
         [HttpGet]
-        [Route("Orders/GetOrders")]
         public async Task<IEnumerable<OrderResponseModel>> GetOrders()
         {
             return await _orderRepository.GetAllOrders();
         }
 
         // GET: api/Orders/5
-        [HttpGet]
-        [Route("Orders/GetOrder/{id}")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<OrderResponseModel>> GetOrder(int id)
         {
             var order = await _orderRepository.GetOrder(id);
@@ -38,7 +36,6 @@ namespace SalesOrganizer.Controllers
             {
                 return NotFound();
             }
-
             return Ok(order);
         }
         
@@ -58,24 +55,10 @@ namespace SalesOrganizer.Controllers
                 _orderRepository.DeleteOrder(id);
                 return Ok();
             }
-            catch(Exception e)
+            catch(Exception)
             {
-                return BadRequest(e);
+                return BadRequest();
             }
-        }
-
-        [HttpGet]
-        [Route("Orders/GetOrdersByCustomer/{id}")]
-        public IEnumerable<OrderResponseModel> GetOrdersByCustomer(int id)
-        {
-            return _orderRepository.GetOrdersByCustomer(id);
-        }
-        
-        [HttpGet]
-        [Route("Orders/GetOrdersByProduct/{id}")]
-        public IEnumerable<OrderResponseModel> GetOrdersByProduct(int id)
-        {
-            return _orderRepository.GetOrdersByProduct(id);
         }
     }
 }

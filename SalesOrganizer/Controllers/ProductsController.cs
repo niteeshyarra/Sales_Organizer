@@ -13,10 +13,12 @@ namespace SalesOrganizer.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly IProductRepository _productRepository;
+        private readonly IOrderRepository _orderRepository;
 
-        public ProductsController(IProductRepository productRepository)
+        public ProductsController(IProductRepository productRepository, IOrderRepository orderRepository)
         {
             _productRepository = productRepository;
+            _orderRepository = orderRepository;
         }
 
         // GET: api/Products
@@ -57,11 +59,37 @@ namespace SalesOrganizer.Controllers
                 _productRepository.DeleteProduct(id);
                 return Ok();
             }
-            catch (Exception e)
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
+            catch (Exception)
+            {
+                return NotFound();
+            }
+
+        }
+
+        [HttpPut]
+        public ActionResult UpdateProduct(int id, ProductRequestModel product)
+        {
+            try
+            {
+                _productRepository.UpdateProduct(id, product);
+                return Ok();
+            }
+            catch(Exception e)
             {
                 return BadRequest(e);
             }
+            
+        }
 
+        [HttpGet]
+        [Route("{id}/Orders")]
+        public IEnumerable<OrderResponseModel> GetOrdersByProduct(int id)
+        {
+            return _orderRepository.GetOrdersByProduct(id);
         }
     }
 }

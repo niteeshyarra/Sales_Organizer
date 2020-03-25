@@ -35,16 +35,15 @@ namespace SalesOrganizer.Repositories
             _customerContext.SaveChanges();
         }
 
-        public void DeleteProduct(int id)
+        public async Task DeleteProduct(int id)
         {
-            var product = GetProduct(id);
+            var product = await FindProduct(id);
             if (product == null)
             {
-                throw new ArgumentException("Record Doesn't Exist");
+                throw new KeyNotFoundException();
             }
 
-            var mappedProduct = _mapper.Map<ProductResponseModel, Product>(product.Result);
-            _customerContext.Products.Remove(mappedProduct);
+            _customerContext.Products.Remove(product);
             _customerContext.SaveChanges();
         }
 
@@ -69,22 +68,21 @@ namespace SalesOrganizer.Repositories
 
         }
 
-        public void UpdateProduct(ProductRequestModel prouct)
+        public async Task UpdateProduct(int id, ProductRequestModel prouct)
         {
-            var productDTO = _mapper.Map<ProductRequestModel, Product>(prouct);
-            var foundProduct = _customerContext.Products.FindAsync(productDTO.ProductId);
+            var existingProduct = await FindProduct(id);
 
-            if (foundProduct == null)
+            if (existingProduct == null)
             {
-                throw new ArgumentException("No record Exists to update");
+                throw new KeyNotFoundException("No record Exists to update");
             }
-            _customerContext.Products.Update(productDTO);
+            var mapperProduct = _mapper.Map<ProductRequestModel, Product>(prouct, existingProduct);
+            _customerContext.Products.Update(mapperProduct);
             _customerContext.SaveChanges();
         }
-        public async Task<bool> FindProduct(int id)
+        private async Task<Product> FindProduct(int id)
         {
-            var product = await _customerContext.Products.FindAsync(id);
-            return product == null ? false : true;
+            return await _customerContext.Products.FindAsync(id);
         }
     }
 }

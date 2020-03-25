@@ -11,9 +11,8 @@ namespace SalesOrganizer.Repositories.Interfaces
     {
         Task AddProduct(ProductRequestModel product);
         Task<ProductResponseModel> GetProduct(int id);
-        void UpdateProduct(ProductRequestModel product);
-        void DeleteProduct(int id);
+        Task UpdateProduct(int id, ProductRequestModel product);
+        Task DeleteProduct(int id);
         Task<IEnumerable<ProductResponseModel>> GetAllProducts();
-        Task<bool> FindProduct(int id);
     }
 }

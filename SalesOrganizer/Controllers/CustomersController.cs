@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SalesOrganizer.Repositories;
 using SalesOrganizer.Repositories.Interfaces;
 using SalesOrganizer.RequestModels;
 using SalesOrganizer.ResponseModels;
@@ -13,10 +14,12 @@ namespace SalesOrganizer.Controllers
     public class CustomersController : ControllerBase
     {
         private readonly ICustomerRepository _customerRepository;
+        private readonly IOrderRepository _orderRepository;
 
-        public CustomersController(ICustomerRepository customerRepository)
+        public CustomersController(ICustomerRepository customerRepository, IOrderRepository orderRepository)
         {
             _customerRepository = customerRepository;
+            _orderRepository = orderRepository;
         }
 
         // GET: api/Customers
@@ -36,6 +39,13 @@ namespace SalesOrganizer.Controllers
                 return NotFound();
             }
             return customer;
+        }
+
+        // GET: api/Customers/5/Orders
+        [HttpGet("{id}/Orders")]
+        public IEnumerable<OrderResponseModel> GetOrdersByCustomer(int id)
+        {
+            return _orderRepository.GetOrdersByCustomer(id);
         }
 
         // PUT: api/Customers/5

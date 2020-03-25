@@ -10,6 +10,7 @@ namespace SalesOrganizer.ResponseModels
         public int OrderId { get; set; }
         public DateTime OrderDate { get; set; }
         public int CustomerId { get; set; }
+        public CustomerResponseModel Customer { get; set; }
         public ICollection<ProductOrderResponseModel> ProductOrders { get; set; }
     }
 }
