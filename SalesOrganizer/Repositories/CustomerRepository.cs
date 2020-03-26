@@ -28,7 +28,7 @@ namespace SalesOrganizer.Repositories
 
             if (customer == null)
             {
-                throw new ArgumentException("Customer Can't be null");
+                throw new ArgumentNullException(nameof(CustomerRequestModel));
             }
             
             var mappedCustomer = _mapper.Map<CustomerRequestModel, Customer>(customer);

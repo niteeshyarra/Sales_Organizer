@@ -86,10 +86,6 @@ namespace SalesOrganizer.Controllers
             {
                 return NotFound();
             }
-            catch (Exception)
-            {
-                return StatusCode(500);
-            }
         }
     }
 }
