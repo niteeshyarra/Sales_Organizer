@@ -62,7 +62,7 @@ namespace SalesOrganizer.Repositories
             return customersDTO;
         }
 
-        public async Task<CustomerResponseModel> GetCustomer(int id)
+        public async Task<CustomerResponseModel> GetCustomerById(int id)
         {
             var foundCustomer = await _customerContext.Customers.FindAsync(id);
 

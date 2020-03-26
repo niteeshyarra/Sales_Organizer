@@ -14,7 +14,7 @@ namespace SalesOrganizer.Repositories.Interfaces
         Task<OrderResponseModel> GetOrder(int id);
         Task<IEnumerable<OrderResponseModel>> GetAllOrders();
         Task DeleteOrder(int id);
-        IEnumerable<OrderResponseModel> GetOrdersByCustomer(int id);
-        IEnumerable<OrderResponseModel> GetOrdersByProduct(int id);
+        IEnumerable<OrderResponseModel> GetOrdersByCustomerId(int id);
+        IEnumerable<ProductOrderResponseModel> GetProductOrdersByProductId(int id);
     }
 }

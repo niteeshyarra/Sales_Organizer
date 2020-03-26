@@ -51,24 +51,21 @@ namespace SalesOrganizer.Repositories
             _customerContext.SaveChanges();
         }
 
-        public IEnumerable<OrderResponseModel> GetOrdersByCustomer(int id)
+        public IEnumerable<OrderResponseModel> GetOrdersByCustomerId(int id)
         {
             var orders = _customerContext.Orders.Include(p => p.ProductOrders).Where(c => c.CustomerId == id);
             
             return _mapper.Map<IEnumerable<Order>, IEnumerable<OrderResponseModel>>(orders);
         }
 
-        public IEnumerable<OrderResponseModel> GetOrdersByProduct(int id)
+        public IEnumerable<ProductOrderResponseModel> GetProductOrdersByProductId(int id)
         {
-            List<OrderResponseModel> ordersDTO = new List<OrderResponseModel>();
             var orders = _customerContext.ProductOrders
                                                         .Include(po => po.Order).ThenInclude(o => o.Customer)
-                                                        .Include(po => po.Order).ThenInclude(o => o.ProductOrders)
-                                                        .Where(p => p.ProductId == id)
-                                                        .Select(po => po.Order);
+                                                        .Where(p => p.ProductId == id);
 
 
-            return _mapper.Map<IEnumerable<Order>, IEnumerable<OrderResponseModel>>(orders);
+            return _mapper.Map<IEnumerable<ProductOrder>, IEnumerable<ProductOrderResponseModel>>(orders);
         }
 
         public async Task<IEnumerable<OrderResponseModel>> GetAllOrders()

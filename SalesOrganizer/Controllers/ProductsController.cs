@@ -33,7 +33,7 @@ namespace SalesOrganizer.Controllers
         public async Task<ActionResult<ProductResponseModel>> GetProduct(int id)
         {
 
-            var product = await _productRepository.GetProduct(id);
+            var product = await _productRepository.GetProductById(id);
 
             if (product == null)
             {

@@ -10,7 +10,7 @@ namespace SalesOrganizer.Repositories.Interfaces
     public interface IProductRepository
     {
         Task AddProduct(ProductRequestModel product);
-        Task<ProductResponseModel> GetProduct(int id);
+        Task<ProductResponseModel> GetProductById(int id);
         Task UpdateProduct(int id, ProductRequestModel product);
         Task DeleteProduct(int id);
         Task<IEnumerable<ProductResponseModel>> GetAllProducts();

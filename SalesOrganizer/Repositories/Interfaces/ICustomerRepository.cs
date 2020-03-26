@@ -10,7 +10,7 @@ namespace SalesOrganizer.Repositories.Interfaces
     public interface ICustomerRepository
     {
         Task AddCustomer(CustomerRequestModel customer);
-        Task<CustomerResponseModel> GetCustomer(int id);
+        Task<CustomerResponseModel> GetCustomerById(int id);
         Task UpdateCustomer(int id, CustomerRequestModel customer);
         Task DeleteCustomer(int id);
         Task<IEnumerable<CustomerResponseModel>> GetAllCustomers();

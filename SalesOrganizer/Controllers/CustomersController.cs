@@ -33,8 +33,8 @@ namespace SalesOrganizer.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<CustomerResponseModel>> GetCustomer(int id)
         {
-            var customer = await _customerRepository.GetCustomer(id);
-            if(customer == null)
+            var customer = await _customerRepository.GetCustomerById(id);
+            if (customer == null)
             {
                 return NotFound();
             }
@@ -43,30 +43,30 @@ namespace SalesOrganizer.Controllers
 
         // GET: api/Customers/5/Orders
         [HttpGet("{id}/Orders")]
-        public IEnumerable<OrderResponseModel> GetOrdersByCustomer(int id)
+        public IEnumerable<OrderResponseModel> GetOrdersByCustomerId(int id)
         {
-            return _orderRepository.GetOrdersByCustomer(id);
+            return _orderRepository.GetOrdersByCustomerId(id);
         }
 
         // PUT: api/Customers/5
         [HttpPut("{id}")]
-        public async Task<ActionResult> Update(int id, CustomerRequestModel customer)
+        public async Task<ActionResult> UpdateCustomer(int id, CustomerRequestModel customer)
         {
             try
             {
                 await _customerRepository.UpdateCustomer(id, customer);
                 return Ok();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return BadRequest(e);
             }
-            
+
         }
 
         // POST: api/Customers
         [HttpPost]
-        public async Task<ActionResult> Add(CustomerRequestModel customer)
+        public async Task<ActionResult> AddCustomer(CustomerRequestModel customer)
         {
             await _customerRepository.AddCustomer(customer);
 
@@ -75,7 +75,7 @@ namespace SalesOrganizer.Controllers
 
         // DELETE: api/Customers/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult> DeleteCustomer(int id)
         {
             try
             {
@@ -89,7 +89,7 @@ namespace SalesOrganizer.Controllers
             catch (Exception)
             {
                 return StatusCode(500);
-            }            
-        }        
+            }
+        }
     }
 }

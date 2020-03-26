@@ -60,7 +60,7 @@ namespace SalesOrganizer.Repositories
             return products;
         }
 
-        public async Task<ProductResponseModel> GetProduct(int id)
+        public async Task<ProductResponseModel> GetProductById(int id)
         {
             var productDTO = await _customerContext.Products.FirstOrDefaultAsync(p => p.ProductId == id);
 
