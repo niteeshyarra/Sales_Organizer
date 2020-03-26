@@ -48,16 +48,20 @@ namespace SalesOrganizer.Controllers
 
         // DELETE: api/Orders/5
         [HttpDelete("{id}")]
-        public ActionResult DeleteOrder(int id)
+        public async Task<ActionResult> DeleteOrder(int id)
         {
             try
             {
-                _orderRepository.DeleteOrder(id);
+                await _orderRepository.DeleteOrder(id);
                 return Ok();
             }
-            catch(Exception)
+            catch(KeyNotFoundException)
             {
-                return BadRequest();
+                return NotFound();
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
             }
         }
     }

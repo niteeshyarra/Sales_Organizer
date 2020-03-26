@@ -52,11 +52,11 @@ namespace SalesOrganizer.Controllers
 
         // DELETE: api/Products/5
         [HttpDelete("{id}")]
-        public ActionResult DeleteProduct(int id)
+        public async Task<ActionResult> DeleteProduct(int id)
         {
             try
             {
-                _productRepository.DeleteProduct(id);
+                await _productRepository.DeleteProduct(id);
                 return Ok();
             }
             catch (KeyNotFoundException)
@@ -71,11 +71,11 @@ namespace SalesOrganizer.Controllers
         }
 
         [HttpPut]
-        public ActionResult UpdateProduct(int id, ProductRequestModel product)
+        public async Task<ActionResult> UpdateProduct(int id, ProductRequestModel product)
         {
             try
             {
-                _productRepository.UpdateProduct(id, product);
+                await _productRepository.UpdateProduct(id, product);
                 return Ok();
             }
             catch(Exception e)

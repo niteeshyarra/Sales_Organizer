@@ -45,7 +45,7 @@ namespace SalesOrganizer.Repositories
 
             if (order == null)
             {
-                throw new ArgumentException("The record Does not Exist");
+                throw new KeyNotFoundException();
             }
             _customerContext.Orders.Remove(order);
             _customerContext.SaveChanges();
@@ -62,8 +62,8 @@ namespace SalesOrganizer.Repositories
         {
             List<OrderResponseModel> ordersDTO = new List<OrderResponseModel>();
             var orders = _customerContext.ProductOrders
-                                                        .Include(po => po.Order)
-                                                            .ThenInclude(o => o.Customer)
+                                                        .Include(po => po.Order).ThenInclude(o => o.Customer)
+                                                        .Include(po => po.Order).ThenInclude(o => o.ProductOrders)
                                                         .Where(p => p.ProductId == id)
                                                         .Select(po => po.Order);
 
@@ -73,10 +73,10 @@ namespace SalesOrganizer.Repositories
 
         public async Task<IEnumerable<OrderResponseModel>> GetAllOrders()
         {
-            var orders = _customerContext.Orders
+            var orders = await _customerContext.Orders
                                             .Include(o => o.Customer)
                                             .Include(p => p.ProductOrders)
-                                                .ThenInclude(po => po.Product);
+                                                .ThenInclude(po => po.Product).ToListAsync();
 
             return _mapper.Map<IEnumerable<Order>, IEnumerable<OrderResponseModel>>(orders);
         }
