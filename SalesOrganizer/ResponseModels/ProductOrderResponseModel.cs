@@ -6,6 +6,6 @@
         public int Quantity { get; set; }
         public int ProductId { get; set; }
         public ProductResponseModel Product { get; set; }
-        public OrderResponseModel Order { get; set; } 
+        public OrderResponseModelExcludeProductOrders Order { get; set; } 
     }
 }

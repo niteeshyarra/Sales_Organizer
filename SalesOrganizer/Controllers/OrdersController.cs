@@ -42,6 +42,7 @@ namespace SalesOrganizer.Controllers
         [HttpPost]
         public async Task<ActionResult> PostOrder(OrderRequestModel order)
         {
+            order.CreatedDateTime = DateTime.UtcNow;
             await _orderRepository.AddOrder(order);
             return Ok();
         }

@@ -74,7 +74,7 @@ namespace SalesOrganizer.Repositories
 
             if (existingProduct == null)
             {
-                throw new KeyNotFoundException("No record Exists to update");
+                throw new KeyNotFoundException();
             }
             var mapperProduct = _mapper.Map<ProductRequestModel, Product>(prouct, existingProduct);
             _customerContext.Products.Update(mapperProduct);

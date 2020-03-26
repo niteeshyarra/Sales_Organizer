@@ -18,6 +18,7 @@ namespace SalesOrganizer.Mappers
             CreateMap<Product, ProductResponseModel>();
             CreateMap<Order, OrderResponseModel>();
             CreateMap<ProductOrder, ProductOrderResponseModel>();
+            CreateMap<Order, OrderResponseModelExcludeProductOrders>();
         }
     }
 }

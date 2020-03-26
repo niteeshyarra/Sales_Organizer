@@ -78,18 +78,18 @@ namespace SalesOrganizer.Controllers
                 await _productRepository.UpdateProduct(id, product);
                 return Ok();
             }
-            catch(Exception e)
+            catch(KeyNotFoundException)
             {
-                return BadRequest(e);
+                return NotFound();
             }
             
         }
 
         [HttpGet]
-        [Route("{id}/Orders")]
-        public IEnumerable<OrderResponseModel> GetOrdersByProduct(int id)
+        [Route("{id}/ProductOrders")]
+        public IEnumerable<ProductOrderResponseModel> GetOrdersByProduct(int id)
         {
-            return _orderRepository.GetOrdersByProduct(id);
+            return _orderRepository.GetProductOrdersByProductId(id);
         }
     }
 }
