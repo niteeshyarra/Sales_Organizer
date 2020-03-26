@@ -57,9 +57,9 @@ namespace SalesOrganizer.Controllers
                 await _customerRepository.UpdateCustomer(id, customer);
                 return Ok();
             }
-            catch (Exception e)
+            catch (KeyNotFoundException)
             {
-                return BadRequest(e);
+                return NotFound();
             }
 
         }
